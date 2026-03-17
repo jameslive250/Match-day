@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sports 803 · Today's Events</title>
+
+  <meta name="description" content="Today's live sports events — Champions League, NBA, UFC, F1 and more. Updated automatically every 5 minutes.">
+  <meta property="og:type"        content="website">
+  <meta property="og:title"       content="Sports 803 · Today's Live Events">
+  <meta property="og:description" content="Today's live sports events — Champions League, NBA, UFC, F1 and more. Updated automatically every 5 minutes.">
+  <meta property="og:image"       content="https://livetv.wtvpc.com/wp-content/uploads/2017/06/tv-image.gif">
+  <meta property="og:image:width"  content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:url"         content="">
+  <meta name="twitter:card"        content="summary_large_image">
+  <meta name="twitter:title"       content="Sports 803 · Today's Live Events">
+  <meta name="twitter:description" content="Today's live sports events — Champions League, NBA, UFC, F1 and more.">
+  <meta name="twitter:image"       content="https://livetv.wtvpc.com/wp-content/uploads/2017/06/tv-image.gif">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0a0c10;
+      --surface: #12151c;
+      --card: #181c26;
+      --border: #242836;
+      --accent: #e8ff47;
+      --text: #f0f2f7;
+      --muted: #8892a4;
+      --radius: 10px;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Inter', sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      min-height: 100vh;
+    }
+
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 58px;
+      gap: 16px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .logo-badge {
+      background: var(--accent);
+      color: #0a0c10;
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: 13px;
+      letter-spacing: 0.04em;
+      padding: 4px 8px;
+      border-radius: 5px;
+    }
+
+    .logo-name {
+      font-family: 'Oswald', sans-serif;
+      font-size: 20px;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .header-date { font-size: 12px; color: var(--muted); }
+
+    #refresh-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 5px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-size: 12px;
+      font-family: 'Inter', sans-serif;
+      transition: all 0.18s;
+    }
+    #refresh-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+    .filter-bar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 20px;
+      overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .filter-bar::-webkit-scrollbar { display: none; }
+
+    .filter-inner {
+      max-width: 960px;
+      margin: 0 auto;
+      display: flex;
+      gap: 4px;
+      padding: 10px 0;
+    }
+
+    .filter-btn {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      font-family: 'Inter', sans-serif;
+      font-size: 11px;
+      font-weight: 500;
+      padding: 5px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all 0.18s;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: #0a0c10;
+    }
+
+    main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 26px 20px 60px;
+    }
+
+    #status-bar {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 22px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .status-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--muted);
+      flex-shrink: 0;
+    }
+    .status-dot.live  { background: #22c55e; box-shadow: 0 0 6px #22c55e88; }
+    .status-dot.error { background: #ef4444; }
+
+    .section-head {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 12px;
+      margin-top: 30px;
+    }
+    .section-head:first-child { margin-top: 0; }
+
+    .section-head h2 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text);
+      white-space: nowrap;
+    }
+
+    .section-line { flex: 1; height: 1px; background: var(--border); }
+
+    .section-count {
+      font-size: 11px;
+      color: var(--muted);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      padding: 2px 8px;
+      border-radius: 20px;
+    }
+
+    .events-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 8px;
+      margin-bottom: 6px;
+    }
+    @media (min-width: 560px) { .events-grid { grid-template-columns: 1fr 1fr; } }
+    @media (min-width: 860px) { .events-grid { grid-template-columns: 1fr 1fr 1fr; } }
+
+    .event-card {
+      display: flex;
+      flex-direction: column;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      text-decoration: none;
+      color: inherit;
+      transition: border-color 0.18s, background 0.18s, transform 0.14s;
+      position: relative;
+      overflow: hidden;
+    }
+    .event-card:hover {
+      border-color: #323852;
+      background: #1c2130;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+    }
+    .event-card::after {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: transparent;
+      transition: background 0.18s;
+    }
+    .event-card:hover::after { background: var(--accent); }
+
+    /* ── Original thumbnail (fallback) ── */
+    .card-thumb {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+      display: block;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      transition: opacity 0.2s;
+    }
+    .card-thumb-placeholder {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 32px;
+    }
+
+    /* ── Match thumbnail (teams + score) ── */
+    .match-thumb {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 14px;
+      position: relative;
+      overflow: hidden;
+      background: linear-gradient(160deg, #0d1118 0%, #141926 55%, #0d1118 100%);
+    }
+
+    /* subtle pitch-lines texture */
+    .match-thumb::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background:
+        repeating-linear-gradient(
+          90deg,
+          transparent,
+          transparent 28px,
+          rgba(255,255,255,.018) 28px,
+          rgba(255,255,255,.018) 29px
+        );
+      pointer-events: none;
+    }
+
+    .mt-team {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 7px;
+      z-index: 1;
+      min-width: 0;
+    }
+
+    .mt-logo-wrap {
+      width: 54px;
+      height: 54px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .mt-logo {
+      max-width: 54px;
+      max-height: 54px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      filter: drop-shadow(0 2px 10px rgba(0,0,0,0.6));
+    }
+
+    .mt-logo-placeholder {
+      width: 50px;
+      height: 50px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .mt-name {
+      font-size: 9.5px;
+      color: var(--muted);
+      text-align: center;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      font-weight: 500;
+      letter-spacing: 0.02em;
+      padding: 0 4px;
+    }
+
+    .mt-center {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      flex-shrink: 0;
+      width: 72px;
+      z-index: 1;
+    }
+
+    .mt-score {
+      font-family: 'Oswald', sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--text);
+      letter-spacing: 4px;
+      line-height: 1;
+    }
+
+    .mt-vs {
+      font-family: 'Oswald', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: #3a4258;
+      letter-spacing: 3px;
+      line-height: 1;
+    }
+
+    .mt-badge {
+      font-size: 8.5px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 3px;
+      white-space: nowrap;
+    }
+    .mt-badge.live {
+      background: rgba(34,197,94,.18);
+      color: #22c55e;
+      border: 1px solid rgba(34,197,94,.35);
+      animation: pulse-live 1.6s ease-in-out infinite;
+    }
+    .mt-badge.ft {
+      background: rgba(148,163,184,.09);
+      color: var(--muted);
+      border: 1px solid var(--border);
+    }
+    .mt-badge.pre {
+      background: rgba(232,255,71,.07);
+      color: var(--accent);
+      border: 1px solid rgba(232,255,71,.22);
+    }
+    .mt-badge.loading {
+      background: transparent;
+      color: #2a3045;
+      border: 1px solid #2a3045;
+    }
+
+    @keyframes pulse-live {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: .65; }
+    }
+
+    /* ── Watch Live Button ── */
+    .watch-btn-wrap {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+      opacity: 0;
+      transition: opacity 0.2s, transform 0.2s;
+      pointer-events: none;
+    }
+
+    .event-card:hover .watch-btn-wrap {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%) translateY(-2px);
+    }
+
+    .watch-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--accent);
+      color: #0a0c10;
+      font-family: 'Oswald', sans-serif;
+      font-weight: 700;
+      font-size: 11px;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 7px 16px;
+      border-radius: 20px;
+      text-decoration: none;
+      white-space: nowrap;
+      box-shadow: 0 4px 16px rgba(232,255,71,0.35);
+      transition: background 0.15s, box-shadow 0.15s, transform 0.15s;
+    }
+
+    .watch-btn:hover {
+      background: #f5ff80;
+      box-shadow: 0 6px 20px rgba(232,255,71,0.5);
+      transform: scale(1.04);
+    }
+
+    .watch-btn .play-icon {
+      width: 14px;
+      height: 14px;
+      background: #0a0c10;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 7px;
+      flex-shrink: 0;
+    }
+
+    /* Always-visible watch btn for non-vs (single event) cards */
+    .watch-btn-static {
+      opacity: 1;
+      pointer-events: auto;
+      transform: translateX(-50%);
+    }
+
+    /* On touch devices show watch button always */
+    @media (hover: none) {
+      .watch-btn-wrap { opacity: 1; pointer-events: auto; }
+    }
+
+    /* loading shimmer on thumb while fetching */
+    .thumb-loading {
+      width: 100%;
+      aspect-ratio: 16/9;
+      background: linear-gradient(90deg, var(--card) 25%, #1e2333 50%, var(--card) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-body {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 11px 13px;
+      flex: 1;
+    }
+
+    .sport-icon {
+      width: 30px; height: 30px;
+      border-radius: 6px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      flex-shrink: 0;
+    }
+
+    .event-info { flex: 1; min-width: 0; }
+
+    .event-title {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      margin-bottom: 4px;
+    }
+
+    .event-meta {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+
+    .event-label {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .event-date { font-size: 11px; color: var(--muted); }
+
+    .event-arrow {
+      color: var(--border);
+      font-size: 16px;
+      flex-shrink: 0;
+      transition: color 0.15s, transform 0.15s;
+    }
+    .event-card:hover .event-arrow { color: var(--accent); transform: translateX(2px); }
+
+    /* score inline in card-body */
+    .inline-score {
+      font-family: 'Oswald', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--text);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 5px;
+      padding: 2px 7px;
+      letter-spacing: 2px;
+      flex-shrink: 0;
+    }
+    .inline-score.live { border-color: rgba(34,197,94,.4); color: #22c55e; }
+
+    /* label colours */
+    .lc-ucl, .lc-champions-league    { background: rgba(168,85,247,.15); color: #d8b4fe; border: 1px solid rgba(168,85,247,.3); }
+    .lc-la-liga, .lc-laliga          { background: rgba(239,68,68,.15);  color: #fca5a5; border: 1px solid rgba(239,68,68,.3); }
+    .lc-serie-a                       { background: rgba(34,197,94,.15);  color: #86efac; border: 1px solid rgba(34,197,94,.3); }
+    .lc-bundesliga                    { background: rgba(234,179,8,.15);  color: #fde047; border: 1px solid rgba(234,179,8,.3); }
+    .lc-fa-cup,.lc-epl,.lc-premier-league { background: rgba(59,130,246,.15); color: #93c5fd; border: 1px solid rgba(59,130,246,.3); }
+    .lc-french-league,.lc-ligue-1,.lc-ligue1 { background: rgba(14,165,233,.15); color: #7dd3fc; border: 1px solid rgba(14,165,233,.3); }
+    .lc-nba                           { background: rgba(249,115,22,.15); color: #fdba74; border: 1px solid rgba(249,115,22,.3); }
+    .lc-ufc,.lc-mma,.lc-boxing,.lc-wwe { background: rgba(239,68,68,.15); color: #fca5a5; border: 1px solid rgba(239,68,68,.3); }
+    .lc-f1,.lc-motorsport             { background: rgba(234,179,8,.15);  color: #fde047; border: 1px solid rgba(234,179,8,.3); }
+    .lc-motogp,.lc-nascar,.lc-indycar { background: rgba(234,179,8,.15); color: #fde047; border: 1px solid rgba(234,179,8,.3); }
+    .lc-tennis                        { background: rgba(20,184,166,.15); color: #5eead4; border: 1px solid rgba(20,184,166,.3); }
+    .lc-default                       { background: rgba(59,130,246,.15); color: #93c5fd; border: 1px solid rgba(59,130,246,.3); }
+
+    .skeleton {
+      background: linear-gradient(90deg, var(--card) 25%, #1e2333 50%, var(--card) 75%);
+      background-size: 200% 100%;
+      animation: shimmer 1.4s infinite;
+      border-radius: var(--radius);
+      height: 200px;
+      border: 1px solid var(--border);
+      margin-bottom: 8px;
+    }
+
+    @keyframes shimmer {
+      0%   { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+
+    .state-msg { text-align: center; padding: 60px 20px; color: var(--muted); }
+    .state-msg .icon { font-size: 40px; margin-bottom: 12px; }
+
+    #no-results { display: none; text-align: center; padding: 60px 20px; color: var(--muted); }
+
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 20px;
+      text-align: center;
+      font-size: 12px;
+      color: var(--muted);
+    }
+    footer a { color: var(--accent); text-decoration: none; }
+  </style>
+
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <a class="logo" href="https://sports803livestream.blogspot.com" target="_blank">
+      <span class="logo-badge">S803</span>
+      <span class="logo-name">Sports 803</span>
+    </a>
+    <div class="header-right">
+      <span class="header-date" id="header-date"></span>
+      <button id="refresh-btn" onclick="loadFeed()">↻ Refresh</button>
+    </div>
+  </div>
+</header>
+
+<div class="filter-bar">
+  <div class="filter-inner" id="filter-bar">
+    <button class="filter-btn active" data-label="all">All</button>
+  </div>
+</div>
+
+<main>
+  <div id="status-bar">
+    <span class="status-dot" id="status-dot"></span>
+    <span id="status-text">Fetching latest posts from Sports 803…</span>
+  </div>
+
+  <div id="sections-container">
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+    <div class="skeleton"></div>
+  </div>
+
+  <div id="no-results">
+    <div class="icon">📭</div>
+    No events found for this category today.
+  </div>
+</main>
+
+<footer>
+  Live feed from
+  <a href="https://sports803livestream.blogspot.com" target="_blank">sports803livestream.blogspot.com</a>
+  &nbsp;·&nbsp; Showing posts from the last 24 hours · auto-refreshes every 5 min
+</footer>
+
+<script>
+// ─── CONFIG ───────────────────────────────
+const BLOG_URL  = 'https://sports803livestream.blogspot.com';
+const MAX_POSTS = 50;
+const EXPIRE_MS = 24 * 60 * 60 * 1000;
+
+// ─── ESPN LEAGUE MAP ──────────────────────
+// Maps label keywords → ESPN scoreboard path
+const ESPN_MAP = {
+  'champions league' : 'soccer/uefa.champions',
+  'ucl'              : 'soccer/uefa.champions',
+  'europa league'    : 'soccer/uefa.europa',
+  'uel'              : 'soccer/uefa.europa',
+  'conference league': 'soccer/uefa.europa.conf',
+  'premier league'   : 'soccer/eng.1',
+  'epl'              : 'soccer/eng.1',
+  'fa cup'           : 'soccer/eng.fa',
+  'la liga'          : 'soccer/esp.1',
+  'laliga'           : 'soccer/esp.1',
+  'serie a'          : 'soccer/ita.1',
+  'bundesliga'       : 'soccer/ger.1',
+  'ligue 1'          : 'soccer/fra.1',
+  'french league'    : 'soccer/fra.1',
+  'mls'              : 'soccer/usa.1',
+  'turkish'          : 'soccer/tur.1',
+  'nba'              : 'basketball/nba',
+  'nfl'              : 'football/nfl',
+  'nhl'              : 'hockey/nhl',
+  'mlb'              : 'baseball/mlb',
+  'f1'               : 'racing/f1',
+  'formula'          : 'racing/f1',
+};
+
+// ─── CACHES ───────────────────────────────
+const espnCache = {};   // path → events[]
+const logoCache = {};   // "teamName" → url | null
+
+// ─── SPORT EMOJI ──────────────────────────
+const EMOJI_MAP = {
+  'champions league':'🏆','ucl':'🏆',
+  'la liga':'⚽','laliga':'⚽',
+  'serie a':'⚽','bundesliga':'⚽',
+  'fa cup':'⚽','epl':'⚽','premier league':'⚽',
+  'french league':'⚽','ligue':'⚽',
+  'mls':'⚽','europa':'⚽','turkish':'⚽',
+  'nba':'🏀','basketball':'🏀',
+  'ufc':'🥊','mma':'🥊','boxing':'🥊',
+  'wwe':'🤼','wrestling':'🤼',
+  'f1':'🏎','formula':'🏎','indycar':'🏎','nascar':'🏎',
+  'motogp':'🏍',
+  'tennis':'🎾',
+  'rugby':'🏉','cricket':'🏏','golf':'⛳',
+};
+
+function sportEmoji(label) {
+  if (!label) return '🏟';
+  const k = label.toLowerCase();
+  for (const [key, val] of Object.entries(EMOJI_MAP)) {
+    if (k.includes(key)) return val;
+  }
+  return '🏟';
+}
+
+function labelClass(label) {
+  if (!label) return 'lc-default';
+  return 'lc-' + label.toLowerCase().replace(/\s+/g,'-').replace(/[^a-z0-9-]/g,'');
+}
+
+function timeAgo(iso) {
+  const diff = Date.now() - new Date(iso).getTime();
+  if (diff < 60000)    return 'Just posted';
+  if (diff < 3600000)  return Math.floor(diff/60000)+'m ago';
+  if (diff < 86400000) return Math.floor(diff/3600000)+'h ago';
+  return new Date(iso).toLocaleDateString('en-US',{month:'short',day:'numeric'});
+}
+
+// ─── STATE ────────────────────────────────
+let allEvents       = [];
+let activeLabel     = 'all';
+let renderedEvents  = [];   // flat list matching data-idx on cards
+
+// ─── FEED LOADER ──────────────────────────
+function loadFeed() {
+  setStatus('','Fetching latest posts from Sports 803…');
+
+  const old = document.getElementById('_bfeed');
+  if (old) old.remove();
+
+  const s  = document.createElement('script');
+  s.id     = '_bfeed';
+  s.src    = `${BLOG_URL}/feeds/posts/default?alt=json-in-script&max-results=${MAX_POSTS}&orderby=published&callback=_onFeed&t=${Date.now()}`;
+  s.onerror = () => {
+    setStatus('error','Could not load feed. Check your internet connection.');
+    clearSkeletons();
+  };
+  document.head.appendChild(s);
+
+  setTimeout(() => {
+    if (!allEvents.length) {
+      setStatus('error','Feed timed out — try refreshing.');
+      clearSkeletons();
+    }
+  }, 12000);
+}
+
+// ─── JSONP CALLBACK ───────────────────────
+window._onFeed = function(json) {
+  const entries = json.feed.entry || [];
+  const now     = Date.now();
+
+  allEvents = entries.map(e => {
+    const link  = (e.link||[]).find(l => l.rel==='alternate');
+    const label = (e.category||[])[0]?.term || null;
+
+    // We intentionally skip the blog thumbnail here —
+    // we'll use API-fetched images instead.
+    return {
+      title: e.title?.$t || 'Untitled',
+      url:   link?.href  || '#',
+      date:  e.published?.$t || null,
+      label,
+      thumb: null,   // always null — filled by enrichCards
+    };
+  }).filter(e => {
+    if (!e.date) return false;
+    const age = now - new Date(e.date).getTime();
+    return age >= 0 && age <= EXPIRE_MS;
+  });
+
+  const shown = allEvents.length;
+  setStatus(
+    shown ? 'live' : '',
+    shown
+      ? `${shown} event${shown!==1?'s':''} today · auto-refreshes every 5 min`
+      : `No posts in the last 24 hours (${entries.length} total on blog)`
+  );
+
+  buildFilterBar();
+  render();
+};
+
+// ─── FILTER BAR ───────────────────────────
+function buildFilterBar() {
+  const bar = document.getElementById('filter-bar');
+  [...bar.querySelectorAll('.filter-btn:not([data-label="all"])')].forEach(b=>b.remove());
+
+  const labels = [...new Set(allEvents.map(e=>e.label).filter(Boolean))];
+  labels.forEach(label => {
+    const btn = document.createElement('button');
+    btn.className     = 'filter-btn';
+    btn.dataset.label = label;
+    btn.textContent   = label;
+    bar.appendChild(btn);
+  });
+
+  bar.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      bar.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      activeLabel = btn.dataset.label;
+      render();
+    });
+  });
+
+  const act = bar.querySelector(`[data-label="${CSS.escape(activeLabel)}"]`);
+  bar.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  (act || bar.querySelector('[data-label="all"]')).classList.add('active');
+  if (!act) activeLabel = 'all';
+}
+
+// ─── RENDER ───────────────────────────────
+function render() {
+  const container = document.getElementById('sections-container');
+  const noResults = document.getElementById('no-results');
+  clearSkeletons();
+
+  const filtered = activeLabel==='all'
+    ? allEvents
+    : allEvents.filter(e=>(e.label||'').toLowerCase()===activeLabel.toLowerCase());
+
+  if (!filtered.length) {
+    container.innerHTML = '';
+    renderedEvents = [];
+    noResults.style.display = 'block';
+    return;
+  }
+  noResults.style.display = 'none';
+
+  // Build groups
+  const groups = {};
+  if (activeLabel !== 'all') {
+    groups[activeLabel] = filtered;
+  } else {
+    filtered.forEach(e => {
+      const k = e.label || 'Other';
+      (groups[k] = groups[k]||[]).push(e);
+    });
+  }
+
+  // Assign global idx to each event for DOM targeting
+  renderedEvents = [];
+  let idx = 0;
+  const html = Object.entries(groups).map(([label, events]) => {
+    const cards = events.map(e => {
+      const cardIdx = idx++;
+      renderedEvents.push(e);
+      return `
+        <a class="event-card" href="${e.url}" target="_blank" rel="noopener" data-idx="${cardIdx}">
+          <div class="thumb-loading" data-thumb-idx="${cardIdx}"></div>
+          <div class="card-body">
+            <div class="sport-icon">${sportEmoji(e.label)}</div>
+            <div class="event-info">
+              <div class="event-title" title="${e.title.replace(/"/g,'&quot;')}">${e.title}</div>
+              <div class="event-meta">
+                ${e.label?`<span class="event-label ${labelClass(e.label)}">${e.label}</span>`:''}
+                <span class="event-date">${timeAgo(e.date)}</span>
+              </div>
+            </div>
+            <span class="event-arrow">›</span>
+          </div>
+        </a>`;
+    }).join('');
+    return `
+      <div class="section-head">
+        <h2>${label}</h2>
+        <div class="section-line"></div>
+        <span class="section-count">${events.length}</span>
+      </div>
+      <div class="events-grid">${cards}</div>`;
+  }).join('');
+
+  container.innerHTML = html;
+  enrichCards();
+}
+
+// ─── ENRICH CARDS WITH SCORES + LOGOS ─────
+async function enrichCards() {
+  // Pre-fetch ESPN scoreboards for all leagues present
+  const labelsPresent = [...new Set(renderedEvents.map(e => e.label).filter(Boolean))];
+  await Promise.all(labelsPresent.map(label => fetchESPNScoreboard(label)));
+
+  // Process each card
+  const thumbEls = document.querySelectorAll('[data-thumb-idx]');
+  for (const el of thumbEls) {
+    const cardIdx = parseInt(el.dataset.thumbIdx);
+    const event   = renderedEvents[cardIdx];
+    if (!event) continue;
+
+    const teams = parseMatchTeams(event.title);
+
+    if (!teams) {
+      // Not a vs match — show sport emoji placeholder with static watch button
+      el.outerHTML = `
+        <div class="card-thumb-placeholder" style="position:relative;" data-thumb-idx="${cardIdx}">
+          ${sportEmoji(event.label)}
+          <div class="watch-btn-wrap watch-btn-static">
+            <a class="watch-btn" href="${event.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+              <span class="play-icon">▶</span> Watch Live Stream
+            </a>
+          </div>
+        </div>`;
+      continue;
+    }
+
+    // Fetch ESPN data for this league
+    const espnEvents = getESPNCached(event.label);
+    const scoreData  = findScore(teams.home, teams.away, espnEvents);
+
+    // Logos: prefer ESPN, fall back to TheSportsDB
+    let homeLogo = scoreData?.homeLogo || null;
+    let awayLogo = scoreData?.awayLogo || null;
+
+    const [hl, al] = await Promise.all([
+      homeLogo ? Promise.resolve(homeLogo) : fetchTeamLogo(teams.home),
+      awayLogo ? Promise.resolve(awayLogo) : fetchTeamLogo(teams.away),
+    ]);
+    homeLogo = hl;
+    awayLogo = al;
+
+    // Build badge
+    let badgeHtml = '';
+    if (scoreData) {
+      const { state, status, homeScore, awayScore } = scoreData;
+      const cls = state === 'in' ? 'live' : state === 'post' ? 'ft' : 'pre';
+      const label = state === 'in' ? `🔴 ${status||'LIVE'}` : state === 'post' ? 'FT' : status || 'UPCOMING';
+      badgeHtml = `<span class="mt-badge ${cls}">${label}</span>`;
+    } else {
+      badgeHtml = `<span class="mt-badge pre">📺 WATCH</span>`;
+    }
+
+    // Score or VS
+    const showScore = scoreData && (scoreData.state === 'in' || scoreData.state === 'post');
+    const centerHtml = showScore
+      ? `<div class="mt-score">${scoreData.homeScore}<span style="color:#2a3045;font-size:20px;margin:0 2px">–</span>${scoreData.awayScore}</div>`
+      : `<div class="mt-vs">VS</div>`;
+
+    // Team logo HTML
+    const logoHtml = (logo, name, emoji) => logo
+      ? `<img class="mt-logo" src="${logo}" alt="${name}" loading="lazy" onerror="this.outerHTML='<div class=mt-logo-placeholder>${emoji}</div>'">`
+      : `<div class="mt-logo-placeholder">${emoji}</div>`;
+
+    const emoji = sportEmoji(event.label);
+    const matchThumbHtml = `
+      <div class="match-thumb" style="position:relative;">
+        <div class="mt-team">
+          <div class="mt-logo-wrap">${logoHtml(homeLogo, teams.home, emoji)}</div>
+          <div class="mt-name">${teams.home}</div>
+        </div>
+        <div class="mt-center">
+          ${centerHtml}
+          ${badgeHtml}
+        </div>
+        <div class="mt-team">
+          <div class="mt-logo-wrap">${logoHtml(awayLogo, teams.away, emoji)}</div>
+          <div class="mt-name">${teams.away}</div>
+        </div>
+        <div class="watch-btn-wrap">
+          <a class="watch-btn" href="${event.url}" target="_blank" rel="noopener" onclick="event.stopPropagation()">
+            <span class="play-icon">▶</span> Watch Live Stream
+          </a>
+        </div>
+      </div>`;
+
+    // Find the placeholder and swap it
+    const placeholder = document.querySelector(`[data-thumb-idx="${cardIdx}"]`);
+    if (placeholder) {
+      const tmp = document.createElement('div');
+      tmp.innerHTML = matchThumbHtml;
+      placeholder.replaceWith(tmp.firstElementChild);
+    }
+
+    // Also add inline score chip to card-body for matched events
+    if (scoreData && showScore) {
+      const card = document.querySelector(`.event-card[data-idx="${cardIdx}"]`);
+      if (card) {
+        const arrow = card.querySelector('.event-arrow');
+        const existing = card.querySelector('.inline-score');
+        if (arrow && !existing) {
+          const chip = document.createElement('span');
+          chip.className = 'inline-score' + (scoreData.state === 'in' ? ' live' : '');
+          chip.textContent = `${scoreData.homeScore}–${scoreData.awayScore}`;
+          arrow.before(chip);
+        }
+      }
+    }
+  }
+}
+
+// ─── ESPN FETCH + CACHE ────────────────────
+async function fetchESPNScoreboard(label) {
+  const path = getESPNPath(label);
+  if (!path || espnCache[path] !== undefined) return;
+
+  try {
+    const r = await fetch(`https://site.api.espn.com/apis/site/v2/sports/${path}/scoreboard`, { signal: AbortSignal.timeout(6000) });
+    if (!r.ok) throw new Error('ESPN ' + r.status);
+    const d = await r.json();
+    espnCache[path] = d.events || [];
+  } catch {
+    espnCache[path] = [];
+  }
+}
+
+function getESPNPath(label) {
+  if (!label) return null;
+  const k = label.toLowerCase();
+  for (const [key, path] of Object.entries(ESPN_MAP)) {
+    if (k.includes(key)) return path;
+  }
+  return null;
+}
+
+function getESPNCached(label) {
+  const path = getESPNPath(label);
+  return path ? (espnCache[path] || []) : [];
+}
+
+// ─── PARSE TITLE → HOME / AWAY ────────────
+function parseMatchTeams(title) {
+  // Patterns: "Arsenal vs Chelsea", "Arsenal v Chelsea", "Arsenal – Chelsea", "Arsenal - Chelsea"
+  // Also: "Watch Arsenal vs Chelsea Live Stream"
+  const m = title.match(/^(?:watch\s+)?(.+?)\s+(?:vs?\.?|[-–])\s+(.+?)(?:\s+(?:live|stream|full|hd|free).*)?\s*$/i);
+  if (!m) return null;
+  const home = m[1].trim().replace(/^watch\s+/i,'');
+  const away = m[2].trim();
+  // Skip if either part is too short or looks like junk
+  if (home.length < 2 || away.length < 2) return null;
+  return { home, away };
+}
+
+// ─── FUZZY TEAM MATCH ──────────────────────
+function normTeam(s) {
+  return s.toLowerCase()
+    .replace(/\b(fc|sc|ac|cf|afc|bfc|bsc|rc|cd|ud|sd|vfb|vfl|sv|bv|rb|rcd|tsv)\b/gi,'')
+    .replace(/[^a-z0-9]/g,' ')
+    .replace(/\s+/g,' ')
+    .trim();
+}
+
+function fuzzyTeamMatch(a, b) {
+  const na = normTeam(a), nb = normTeam(b);
+  if (na === nb) return true;
+  if (na.includes(nb) || nb.includes(na)) return true;
+  // first word match (e.g. "Manchester" matches "Manchester City")
+  const wa = na.split(' ')[0], wb = nb.split(' ')[0];
+  if (wa.length > 3 && wa === wb) return true;
+  return false;
+}
+
+// ─── FIND SCORE IN ESPN EVENTS ─────────────
+function findScore(homeTeam, awayTeam, espnEvents) {
+  for (const ev of espnEvents) {
+    const comps = ev.competitions?.[0]?.competitors || [];
+    if (comps.length < 2) continue;
+
+    const homeComp = comps.find(c => c.homeAway === 'home') || comps[0];
+    const awayComp = comps.find(c => c.homeAway === 'away') || comps[1];
+
+    const hn = homeComp.team?.displayName || homeComp.team?.name || '';
+    const an = awayComp.team?.displayName || awayComp.team?.name || '';
+
+    const homeOk = fuzzyTeamMatch(hn, homeTeam) || fuzzyTeamMatch(an, homeTeam);
+    const awayOk = fuzzyTeamMatch(hn, awayTeam) || fuzzyTeamMatch(an, awayTeam);
+    if (!homeOk || !awayOk) continue;
+
+    // Re-orient if needed
+    const hActual = fuzzyTeamMatch(hn, homeTeam) ? homeComp : awayComp;
+    const aActual = fuzzyTeamMatch(an, awayTeam) ? awayComp : homeComp;
+
+    const status = ev.status?.type;
+    const state  = status?.state || 'pre'; // pre | in | post
+
+    return {
+      homeScore: hActual.score ?? '-',
+      awayScore: aActual.score ?? '-',
+      status   : status?.shortDetail || (state === 'in' ? 'LIVE' : state === 'post' ? 'FT' : ''),
+      state,
+      homeLogo : hActual.team?.logo || null,
+      awayLogo : aActual.team?.logo || null,
+      homeTeam : hActual.team?.displayName || homeTeam,
+      awayTeam : aActual.team?.displayName || awayTeam,
+    };
+  }
+  return null;
+}
+
+// ─── THESPORTSDB TEAM LOGO ─────────────────
+async function fetchTeamLogo(teamName) {
+  const key = teamName.toLowerCase().trim();
+  if (logoCache[key] !== undefined) return logoCache[key];
+
+  // Mark in-flight to avoid duplicate requests
+  logoCache[key] = null;
+
+  try {
+    const r = await fetch(
+      `https://www.thesportsdb.com/api/v1/json/3/searchteams.php?t=${encodeURIComponent(teamName)}`,
+      { signal: AbortSignal.timeout(5000) }
+    );
+    if (!r.ok) throw new Error('tsdb ' + r.status);
+    const d = await r.json();
+    const logo = d.teams?.[0]?.strTeamBadge
+      || d.teams?.[0]?.strTeamLogo
+      || null;
+    logoCache[key] = logo;
+    return logo;
+  } catch {
+    logoCache[key] = null;
+    return null;
+  }
+}
+
+// ─── HELPERS ──────────────────────────────
+function setStatus(state, text) {
+  document.getElementById('status-dot').className = 'status-dot' + (state?' '+state:'');
+  document.getElementById('status-text').textContent = text;
+}
+
+function clearSkeletons() {
+  const c = document.getElementById('sections-container');
+  if (c.querySelector('.skeleton')) c.innerHTML = '';
+}
+
+// ─── INIT ─────────────────────────────────
+document.getElementById('header-date').textContent =
+  new Date().toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
+
+document.querySelector('meta[property="og:url"]').setAttribute('content', location.href);
+
+loadFeed();
+setInterval(loadFeed, 5 * 60 * 1000);
+</script>
+
+</body>
+</html>
