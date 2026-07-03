@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>SPORTS 803 TV</title>
+    <style>
+        body { background: #0b0f19; color: white; font-family: sans-serif; }
+        .match-card { background: #1a2238; padding: 20px; margin: 10px; border-radius: 10px; }
+        .modal { display: none; position: fixed; top: 10%; left: 5%; width: 90%; background: #000; padding: 20px; border: 2px solid #00b4d8; }
+        button { background: #00b4d8; color: white; border: none; padding: 15px; width: 100%; margin-top: 10px; cursor: pointer; font-size: 16px; }
+    </style>
+</head>
+<body>
+    <div id="app"><h1>SPORTS 803 TV - LIVE</h1></div>
+    <div id="linkModal" class="modal">
+        <h3>Multiple Links Available</h3>
+        <div id="linkList"></div>
+        <button onclick="document.getElementById('linkModal').style.display='none'">Close</button>
+    </div>
+    <script>
+        // Hano twakoresheje amakuru y'umukino imbonankubone
+        const matches = [
+            { "team": "Argentina vs Cabo Verde", "links": { "TSN_FHD": "https://link-ya-tsn.com", "SPOTV_FHD": "https://link-ya-spotv.com" } }
+        ];
+        const app = document.getElementById('app');
+        matches.forEach(match => {
+            app.innerHTML += `
+                <div class="match-card">
+                    <h2>${match.team}</h2>
+                    <button onclick="showLinks(${JSON.stringify(match.links).replace(/"/g, "'")})">Watch Options</button>
+                </div>`;
+        });
+        function showLinks(links) {
+            const list = document.getElementById('linkList');
+            list.innerHTML = '';
+            for (let name in links) {
+                list.innerHTML += `<button onclick="window.location.href='${links[name]}'">Watch ${name}</button>`;
+            }
+            document.getElementById('linkModal').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
