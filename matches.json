@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "team": "Argentina vs Cabo Verde",
+    "links": {
+      "TSN_FHD": "https://link-ya-tsn-fhd.com",
+      "SPOTV_FHD": "https://link-ya-spotv-fhd.com",
+      "ESPN_SD": "https://link-ya-espn-sd.com"
+    }
+  }
+]
