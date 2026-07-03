@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPORTS 803 TV - Cricfy TV Interface</title>
+    <style>
+        body {
+            background-color: #0b0f19;
+            color: #ffffff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 15px;
+        }
+        .header {
+            border-bottom: 2px solid #00b4d8;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .header h1 {
+            color: #00f5d4;
+            letter-spacing: 2px;
+            margin: 10px 0 5px 0;
+            font-size: 26px;
+        }
+        .header p {
+            color: #8a99ad;
+            font-size: 13px;
+            margin: 0;
+        }
+        
+        .section-title {
+            color: #ffb703;
+            font-size: 18px;
+            margin: 20px 0 10px 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Iframe Auto Match Section */
+        .live-score-wrapper {
+            max-width: 600px;
+            margin: 0 auto 25px auto;
+            border: 2px solid #ffb703;
+            border-radius: 12px;
+            overflow: hidden;
+            background-color: #161b22;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+        .live-score-wrapper iframe {
+            width: 100%;
+            height: 500px;
+            border: none;
+        }
+
+        /* TV Channels Section */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 15px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .card {
+            background-color: #1a2238;
+            border: 2px solid #2e3d61;
+            border-radius: 12px;
+            padding: 15px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .card:hover {
+            transform: translateY(-3px);
+            border-color: #00f5d4;
+            background-color: #1e294a;
+        }
+        .icon {
+            font-size: 35px;
+            margin-bottom: 8px;
+        }
+        .name {
+            font-size: 14px;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .status {
+            font-size: 10px;
+            padding: 2px 6px;
+            border-radius: 8px;
+            font-weight: bold;
+        }
+        .online { background-color: #2a9d8f; color: white; }
+        .offline { background-color: #e63946; color: white; }
+
+        .footer {
+            margin-top: 30px;
+            color: #64748b;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <h1>SPORTS 803 TV</h1>
+        <p>⚡ Cricfy TV Interface ⚡</p>
+    </div>
+
+    <!-- AUTOMATIC MATCH DAY SECTION (UPDATED) -->
+    <div class="section-title">📅 Today's Matches & Schedules (Live)</div>
+    <div class="live-score-wrapper">
+        <iframe src="https://www.scoreaxis.com/widget/live-scores?autoHeight=false&links=false&bodyBackground=%23161b22&textColor=%23ffffff&font=Segoe%20UI" width="100%" height="500"></iframe>
+    </div>
+
+    <!-- TV CHANNELS SECTION -->
+    <div class="section-title">📺 Live TV Channels</div>
+    <div class="grid">
+        <a href="https://v2.sportsurge.net" target="_blank" class="card">
+            <div class="icon">🏏</div>
+            <span class="name">PTV SPORTS</span>
+            <span class="status online">LIVE</span>
+        </a>
+
+        <a href="https://v2.sportsurge.net" target="_blank" class="card">
+            <div class="icon">⚽</div>
+            <span class="name">SKY SPORTS</span>
+            <span class="status online">LIVE</span>
+        </a>
+
+        <a href="#" class="card">
+            <div class="icon">📺</div>
+            <span class="name">TEN SPORTS</span>
+            <span class="status offline">OFFLINE</span>
+        </a>
+    </div>
+
+    <div class="footer">
+        <p>© 2026 Sports 803 Streaming System</p>
+    </div>
+
+</body>
+</html>
